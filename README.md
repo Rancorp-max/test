@@ -1,0 +1,1 @@
+# MagicTales — Deluxe Frontend + Existing Backend\n\nRun: npm i && cp .env.example .env.local && npm run dev. Open / for landing, /demo for editor, /reader?pdf=<url> for reader.\n
