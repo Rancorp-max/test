@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MagicTales — Personalized Storybooks</title>
+  <meta name="theme-color" content="#0e1930" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://ucarecdn.com/libs/widget/3.x/uploadcare.full.min.js"></script>
+  <script>UPLOADCARE_PUBLIC_KEY = "cb99310ced30cdf58418";</script>
+  <style>
+    :root{
+      --brand1:#6C9EFF;
+      --brand2:#6FE3C1;
+      --ink:#0F172A;
+    }
+    html,body{height:100%}
+    body{
+      font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+      color:var(--ink);
+      background:#0e1930;
+      background-image:
+        radial-gradient(1200px 600px at 70% -10%, rgba(111,227,193,.15), transparent 60%),
+        radial-gradient(900px 500px at 10% 10%, rgba(108,158,255,.18), transparent 60%),
+        url('./hero5.png');
+      background-size:cover;
+      background-attachment:fixed;
+      background-position:center;
+    }
+    .glass{background:rgba(255,255,255,.8);backdrop-filter:blur(14px)}
+    .frost{background:rgba(255,255,255,.14);backdrop-filter:blur(10px)}
+    .section-glass{background:rgba(255,255,255,.18);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.18)}
+    .text-shadow{text-shadow:0 2px 18px rgba(0,0,0,.45)}
+    .modal-bg{background:rgba(2,6,23,.62)}
+    .ring-brand{box-shadow:0 0 0 4px rgba(108,158,255,.25)}
+    @media (prefers-reduced-motion: reduce){
+      *{animation:none!important;transition:none!important}
+    }
+    .sparkle-button{position:relative;overflow:hidden;--sparkle-color:rgba(255,255,255,.5);background-size:200% 200%;animation:shimmer 3s linear infinite}
+    .sparkle-button::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background-image:conic-gradient(transparent,var(--sparkle-color),transparent 30%);animation:rotate 4s linear infinite}
+    @keyframes shimmer{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+    @keyframes rotate{100%{transform:rotate(360deg)}}
+    button:focus-visible{outline:2px solid var(--brand1);outline-offset:2px}
+  </style>
+</head>
+<body class="min-h-screen">
+
+  <!-- Header -->
+  <header class="sticky top-0 z-50 backdrop-blur-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-xl bg-white/90 grid place-items-center ring-2 ring-white/40" aria-hidden="true">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M12 2l2.2 4.5L19 7l-3.5 3.3.9 4.7L12 13.7 7.6 15l.9-4.7L5 7l4.8-.5L12 2z" fill="url(#g)"/>
+            <defs><linearGradient id="g" x1="5" y1="2" x2="19" y2="15" gradientUnits="userSpaceOnUse"><stop stop-color="#6C9EFF"/><stop offset="1" stop-color="#6FE3C1"/></linearGradient></defs>
+          </svg>
+        </div>
+        <span class="text-white/95 text-xl font-extrabold tracking-tight">MagicTales</span>
+      </div>
+      <nav class="hidden md:flex items-center gap-8 text-white/80">
+        <a href="#howitworks" class="hover:text-white">How It Works</a>
+        <a href="#wizard" class="hover:text-white">Create</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero & Wizard -->
+  <main>
+    <section class="relative min-h-[92vh] grid place-items-center">
+      <div class="absolute inset-0 bg-gradient-to-b from-[#0e1930]/40 via-[#0e1930]/35 to-[#0e1930]/68" aria-hidden="true"></div>
+
+      <div class="relative z-10 max-w-7xl mx-auto w-full px-4 sm:px-6 py-14 lg:py-24 grid lg:grid-cols-2 gap-10 items-center">
+        <!-- Copy -->
+        <div class="order-2 lg:order-1 text-center lg:text-left">
+          <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white drop-shadow-md text-shadow">
+            Turn your child into the <span class="bg-gradient-to-r from-[#6FE3C1] to-[#6C9EFF] bg-clip-text text-transparent">hero</span> of their own story
+          </h1>
+          <p class="mt-5 text-lg sm:text-xl text-white/85 max-w-2xl text-shadow">
+            Create a one-of-a-kind storybook starring your child in just a few simple steps.
+          </p>
+          <a href="#wizard" class="inline-block mt-6 rounded-full bg-gradient-to-r from-[var(--brand1)] to-[var(--brand2)] text-white font-bold px-6 py-3 shadow-lg hover:opacity-95">
+            Start Your Story
+          </a>
+        </div>
+
+        <!-- Wizard -->
+        <div id="wizard" class="order-1 lg:order-2 w-full lg:w-[520px] mx-auto rounded-3xl shadow-2xl ring-1 ring-white/50 p-6 sm:p-7">
+          <div class="flex items-center justify-center gap-3 mb-6" aria-hidden="true">
+            <div id="progress1" class="w-1/2 h-2 rounded-full bg-white/40 transition-colors"></div>
+            <div id="progress2" class="w-1/2 h-2 rounded-full bg-white/40 transition-colors"></div>
+          </div>
+
+          <!-- Step 1 -->
+          <div id="step1" aria-labelledby="step1Title">
+            <h2 id="step1Title" class="text-center text-white text-xl sm:text-2xl font-bold bg-gradient-to-r from-[#6C9EFF] to-[#6FE3C1] bg-clip-text text-transparent drop-shadow-md mb-4">
+              Step 1: Choose a Book
+            </h2>
+            <div id="categoryGrid" class="grid sm:grid-cols-2 gap-4"></div>
+            <div class="mt-6 flex justify-end">
+              <button id="step1Next" class="rounded-xl bg-gradient-to-r from-[var(--brand1)] to-[var(--brand2)] text-white font-bold py-2 px-6 shadow-lg transition-opacity disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                Next &rarr;
+              </button>
+            </div>
+          </div>
+
+          <!-- Step 2 -->
+          <div id="step2" class="hidden" aria-labelledby="step2Title">
+            <!-- Final Preview -->
+            <div id="final-preview-container" class="hidden text-center">
+              <img id="final-preview-img" alt="Final generated story cover" class="w-full rounded-2xl shadow-xl border border-white/60 ring-4 ring-white/10 aspect-[4/5] object-cover mb-4" />
+              <h3 class="text-white text-xl font-bold mb-4" id="final-title"></h3>
+              <button id="shareBtn" class="w-full sparkle-button rounded-xl bg-gradient-to-r from-[var(--brand1)] to-[var(--brand2)] text-white font-bold py-3 shadow-lg">
+                Share Your Creation
+              </button>
+              <button id="startOverBtn" class="w-full rounded-xl bg-white/70 border border-white/70 py-2 mt-3">Create Another</button>
+            </div>
+
+            <!-- Personalize -->
+            <div id="personalize-form-container">
+              <h2 id="step2Title" class="text-center text-white text-xl sm:text-2xl font-bold bg-gradient-to-r from-[#6C9EFF] to-[#6FE3C1] bg-clip-text text-transparent drop-shadow-md mb-4">
+                Step 2: Personalize
+              </h2>
+              <div class="relative rounded-3xl overflow-hidden shadow-xl border border-white/60 ring-4 ring-white/10 aspect-[4/5] mb-4">
+                <button id="uploadPlaceholder" type="button" class="absolute inset-0 w-full h-full bg-white/20 hover:bg-white/30 flex flex-col items-center justify-center text-slate-600 font-semibold transition-opacity duration-300" aria-label="Upload Photo">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 mb-2" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20 5H4v14l9.292-9.292a1 1 0 0 1 1.414 0L20 15.01V5zM2 5a3 3 0 0 1 3-3h14a3 3 0 0 1 3 3v14a3 3 0 0 1-3 3H5a3 3 0 0 1-3-3V5zm4 3a2 2 0 1 1 0-4 2 2 0 0 1 0 4z"/></svg>
+                  Upload Photo
+                </button>
+                <img id="preview-img" alt="Story cover preview" class="w-full h-full object-cover hidden" />
+                <div id="watermark" class="absolute bottom-2 right-3 text-white/50 text-sm font-bold pointer-events-none hidden" style="text-shadow:1px 1px 1px rgba(0,0,0,.6)">Magic Tales</div>
+                <button id="deleteBtn" type="button" class="absolute top-2 right-2 bg-black/50 p-2 rounded-full text-white hover:bg-black/70 hidden" aria-label="Remove uploaded photo">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 6V3a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v3h5v2h-2v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V8H2V6h5zM9 4v2h6V4H9z"/></svg>
+                </button>
+                <div id="loadingSpinner" class="hidden absolute inset-0 grid place-items-center bg-white/60" aria-hidden="true">
+                  <div class="w-12 h-12 rounded-full border-4 border-[var(--brand1)] border-t-transparent animate-spin"></div>
+                </div>
+              </div>
+
+              <div class="space-y-3">
+                <input type="hidden" role="uploadcare-uploader" id="upload-widget" data-crop="1:1" data-images-only data-show-file-info="false" />
+                <input id="child-name" type="text" placeholder="Child's name" class="w-full rounded-xl border border-white/60 bg-white/90 px-4 py-3 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-[var(--brand1)]" />
+                <textarea id="dedication" rows="2" placeholder="Dedication (optional)" class="w-full rounded-xl border border-white/60 bg-white/90 px-4 py-3 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-[var(--brand1)]"></textarea>
+              </div>
+
+              <div class="mt-4 flex justify-between items-center">
+                <button id="step2Prev" class="rounded-xl bg-white/70 border border-white/70 py-2 px-6">&larr; Previous</button>
+                <button id="generateBtn" class="rounded-xl bg-gradient-to-r from-[var(--brand1)] to-[var(--brand2)] text-white font-bold py-2 px-6 shadow-lg transition-opacity disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                  Generate
+                </button>
+              </div>
+            </div>
+          </div>
+          <!-- /Step 2 -->
+        </div>
+      </div>
+    </section>
+
+    <!-- How it works -->
+    <section id="howitworks" class="section-glass py-16 md:py-24">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6">
+        <h2 class="text-center text-3xl sm:text-4xl font-extrabold text-white drop-shadow-md text-shadow mb-10">
+          How It Works
+        </h2>
+        <div class="grid md:grid-cols-3 gap-6">
+          <div class="rounded-2xl frost p-6 text-center border border-white/20">
+            <div class="mx-auto w-14 h-14 rounded-full grid place-items-center bg-white/90 ring-4 ring-white/25 mb-3">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#6C9EFF" class="w-7 h-7" aria-hidden="true"><path d="M4 5h16v14H4z" opacity=".2"/><path d="M20 3H4a2 2 0 0 0-2 2v1h20V5a2 2 0 0 0-2-2zM2 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H2v10zm5-8h10v2H7v-2z"/></svg>
+            </div>
+            <h3 class="text-white font-semibold text-lg">Upload a Photo</h3>
+            <p class="text-white/80 mt-1 text-sm">One clear image is all we need to turn your child into a storybook character.</p>
+          </div>
+          <div class="rounded-2xl frost p-6 text-center border border-white/20">
+            <div class="mx-auto w-14 h-14 rounded-full grid place-items-center bg-white/90 ring-4 ring-white/25 mb-3">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#6C9EFF" class="w-7 h-7" aria-hidden="true"><path d="M5 3h14v18H5z" opacity=".2"/><path d="M7 3h10a2 2 0 0 1 2 2v1H5V5a2 2 0 0 1 2-2zm-2 5h14v11a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V8zm4 2h6v2H9v-2z"/></svg>
+            </div>
+            <h3 class="text-white font-semibold text-lg">Pick a Book</h3>
+            <p class="text-white/80 mt-1 text-sm">Choose from engaging themes: bedtime, fantasy, space adventures, and more.</p>
+          </div>
+          <div class="rounded-2xl frost p-6 text-center border border-white/20">
+            <div class="mx-auto w-14 h-14 rounded-full grid place-items-center bg-white/90 ring-4 ring-white/25 mb-3">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#6C9EFF" class="w-7 h-7" aria-hidden="true"><path d="M3 7h18v10H3z" opacity=".2"/><path d="M21 5H3v2h18V5zM3 19h18v-2H3v2zm5-5h8v-2H8v2z"/></svg>
+            </div>
+            <h3 class="text-white font-semibold text-lg">Get Your Book</h3>
+            <p class="text-white/80 mt-1 text-sm">Receive a beautifully illustrated storybook starring your child.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Email gate modal -->
+  <div id="emailModal" class="fixed inset-0 hidden modal-bg grid place-items-center p-4 z-[999]" role="dialog" aria-modal="true" aria-labelledby="emailModalTitle">
+    <div class="glass max-w-md w-full rounded-2xl shadow-2xl p-6">
+      <h3 id="emailModalTitle" class="text-xl font-extrabold text-center bg-gradient-to-r from-[#6FE3C1] to-[#6C9EFF] bg-clip-text text-transparent mb-2">
+        Almost There!
+      </h3>
+      <p class="text-center text-slate-700 mb-4">Enter your email to generate your storybook cover.</p>
+      <input type="email" id="userEmail" class="w-full rounded-xl border border-white/60 bg-white/90 px-4 py-3 mb-4" placeholder="you@example.com" />
+      <div class="flex gap-3">
+        <button id="cancelEmail" class="w-1/2 rounded-xl bg-white/70 border border-white/70 py-2">Cancel</button>
+        <button id="submitEmail" class="w-1/2 rounded-xl bg-gradient-to-r from-[var(--brand1)] to-[var(--brand2)] text-white font-bold py-2">Generate</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Share modal -->
+  <div id="shareModal" class="fixed inset-0 hidden modal-bg grid place-items-center p-4 z-[999]" role="dialog" aria-modal="true" aria-labelledby="shareModalTitle">
+    <div class="glass max-w-sm w-full rounded-2xl shadow-2xl p-6 text-center">
+      <h3 id="shareModalTitle" class="text-xl font-extrabold bg-gradient-to-r from-[#6FE3C1] to-[#6C9EFF] bg-clip-text text-transparent mb-4">
+        Share Your Creation!
+      </h3>
+      <div class="space-y-3">
+        <button id="shareActionBtn" class="w-full rounded-xl bg-gradient-to-r from-[var(--brand1)] to-[var(--brand2)] text-white font-bold py-3">
+          Share to Socials
+        </button>
+        <button id="downloadActionBtn" class="w-full rounded-xl bg-white/80 border border-white/70 font-semibold py-3">
+          Download Image
+        </button>
+        <button id="cancelShare" class="w-full rounded-xl bg-transparent text-slate-600 py-2 mt-2">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="py-10">
+    <p class="text-center text-white/70 text-sm">© 2025 MagicTales. All rights reserved.</p>
+  </footer>
+
+  <script>
+    // ---------------- Data & Prompts ----------------
+    const categories = [
+      { name:"Toronto", icon:"https://img.icons8.com/?size=100&id=F3ClW3147PJi&format=png&color=000000", blurb:"Hyper-local fun kids stories" },
+      { name:"Magic and Fantasy", icon:"https://img.icons8.com/fluency/96/magic.png", blurb:"Wands, dragons, and glittering castles." },
+      { name:"Bedtime Routine", icon:"https://img.icons8.com/color/96/sleeping-in-bed.png", blurb:"Wind down with cozy nighttime tales." },
+      { name:"Space Exploration", icon:"https://img.icons8.com/color/96/rocket.png", blurb:"Blast off to colorful planets and stars." },
+      { name:"Counting and Numbers", icon:"https://img.icons8.com/fluency/96/123.png", blurb:"Learn numbers through playful scenes." },
+      { name:"Adventure", icon:"https://img.icons8.com/color/96/trekking.png", blurb:"Mystical quests and brave discoveries." },
+      { name:"Healthy Eating", icon:"https://img.icons8.com/color/96/salad.png", blurb:"Yummy colors, friendly fruits & veg." },
+      { name:"Fairy Tales and Legends", icon:"https://img.icons8.com/color/96/fairy.png", blurb:"Classic magic with a modern sparkle." }
+    ];
+    const promptsByCategory = {
+      "Toronto": "Create a Disney-style animated character illustration of the person in the uploaded photo... a vibrant cartoon storybook scene about a kid taking a walk in Toronto, Canada with the CN Tower in the skyline in the background",
+      "Magic and Fantasy": "Create a Disney-style animated character illustration... a vibrant magical kingdom with glowing towers, friendly dragons, and sparkling skies",
+      "Bedtime Routine": "a cartoon storybook scene about a cozy moonlit bedroom with twinkling stars, plush toys, and warm lamplight",
+      "Space Exploration": "Create a Disney-style animated character illustration... a vibrant cartoon storybook scene about a colorful galaxy with planets, comets, and a friendly robot explorer",
+      "Counting and Numbers": "a cartoon storybook scene about a bright, playful scene filled with big friendly numbers and cheerful creatures",
+      "Adventure": "a cartoon storybook scene about a sunlit forest trail with hidden treasures, maps, and a brave young explorer",
+      "Healthy Eating": "a cartoon storybook scene about a lively kitchen picnic with smiling fruits and veggies in soft pastel tones",
+      "Fairy Tales and Legends": "a cartoon storybook scene about an enchanted woodland with fairies, shimmering lights, and a gentle castle backdrop"
+    };
+
+    // ---------------- App State ----------------
+    let currentStep = 1;
+    let selectedCategory = null;
+    let childName = "";
+    let uploadedPhoto = null;
+    let generatedImageUrl = null;
+
+    // ---------------- DOM Nodes ----------------
+    const step1Div = document.getElementById("step1");
+    const step2Div = document.getElementById("step2");
+    const progress1 = document.getElementById("progress1");
+    const progress2 = document.getElementById("progress2");
+    const step1NextBtn = document.getElementById("step1Next");
+    const step2PrevBtn = document.getElementById("step2Prev");
+    const categoryGrid = document.getElementById("categoryGrid");
+
+    const personalizeFormContainer = document.getElementById("personalize-form-container");
+    const finalPreviewContainer = document.getElementById("final-preview-container");
+    const finalPreviewImg = document.getElementById("final-preview-img");
+    const finalTitle = document.getElementById("final-title");
+    const shareBtn = document.getElementById("shareBtn");
+    const startOverBtn = document.getElementById("startOverBtn");
+
+    const previewImg = document.getElementById("preview-img");
+    const loadingSpinner = document.getElementById("loadingSpinner");
+    const childNameInput = document.getElementById("child-name");
+    const dedicationInput = document.getElementById("dedication");
+    const generateBtn = document.getElementById("generateBtn");
+    const uploadPlaceholder = document.getElementById("uploadPlaceholder");
+    const deleteBtn = document.getElementById("deleteBtn");
+    const watermark = document.getElementById("watermark");
+
+    const emailModal = document.getElementById("emailModal");
+    const cancelEmail = document.getElementById("cancelEmail");
+    const submitEmail = document.getElementById("submitEmail");
+    const userEmail = document.getElementById("userEmail");
+
+    const shareModal = document.getElementById("shareModal");
+    const cancelShare = document.getElementById("cancelShare");
+    const shareActionBtn = document.getElementById("shareActionBtn");
+    const downloadActionBtn = document.getElementById("downloadActionBtn");
+
+    // Uploadcare widget
+    const widget = uploadcare.Widget("#upload-widget");
+
+    // ---------------- Wizard Logic ----------------
+    function renderWizardState() {
+      step1Div.classList.toggle('hidden', currentStep !== 1);
+      step2Div.classList.toggle('hidden', currentStep !== 2);
+
+      const brandGradient = 'linear-gradient(to right, var(--brand1), var(--brand2))';
+      progress1.style.background = currentStep >= 1 ? brandGradient : '';
+      progress2.style.background = currentStep >= 2 ? brandGradient : '';
+    }
+
+    function resetWizard() {
+      currentStep = 1;
+      selectedCategory = null;
+      childName = "";
+      uploadedPhoto = null;
+      generatedImageUrl = null;
+      widget.value(null);
+      previewImg.onload = null;
+
+      categoryGrid.querySelectorAll('button').forEach(b => b.classList.remove('ring-2','ring-white'));
+      step1NextBtn.disabled = true;
+
+      personalizeFormContainer.classList.remove('hidden');
+      finalPreviewContainer.classList.add('hidden');
+      childNameInput.value = '';
+      dedicationInput.value = '';
+      previewImg.classList.add('hidden');
+      previewImg.src = '';
+      uploadPlaceholder.classList.remove('hidden');
+      deleteBtn.classList.add('hidden');
+      watermark.classList.add('hidden');
+      generateBtn.disabled = true;
+
+      renderWizardState();
+    }
+
+    // ---------------- Event Listeners ----------------
+    step1NextBtn.addEventListener('click', () => { currentStep = 2; renderWizardState(); });
+    step2PrevBtn.addEventListener('click', () => { currentStep = 1; renderWizardState(); });
+    startOverBtn.addEventListener('click', resetWizard);
+
+    function renderCategories() {
+      categoryGrid.innerHTML = "";
+      categories.forEach(cat => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "w-full text-left rounded-2xl section-glass border border-white/20 hover:border-white/50 transition p-3";
+        btn.innerHTML = `
+          <div class="flex items-center gap-3">
+            <div class="w-12 h-12 rounded-lg bg-white/90 ring-brand grid place-items-center" aria-hidden="true">
+              <img src="${cat.icon}" alt="" class="w-8 h-8 object-contain" />
+            </div>
+            <div>
+              <div class="text-white font-semibold text-sm">${cat.name}</div>
+              <div class="text-white/80 text-xs">${cat.blurb}</div>
+            </div>
+          </div>`;
+        btn.addEventListener("click", () => {
+          categoryGrid.querySelectorAll('button').forEach(b => b.classList.remove('ring-2','ring-white'));
+          btn.classList.add('ring-2','ring-white');
+          selectedCategory = cat.name;
+          step1NextBtn.disabled = false;
+        });
+        categoryGrid.appendChild(btn);
+      });
+    }
+
+    childNameInput.addEventListener("input", updateGenerateButtonState);
+    uploadPlaceholder.addEventListener("click", () => widget.openDialog());
+    deleteBtn.addEventListener("click", () => widget.value(null));
+
+    widget.onUploadComplete(fileInfo => {
+      uploadedPhoto = fileInfo;
+      uploadPlaceholder.classList.add("hidden");
+      previewImg.src = fileInfo.cdnUrl;
+      previewImg.classList.remove("hidden");
+      deleteBtn.classList.remove("hidden");
+      updateGenerateButtonState();
+    });
+
+    widget.onChange(fileInfo => {
+      if (!fileInfo) {
+        uploadedPhoto = null;
+        previewImg.classList.add("hidden");
+        previewImg.src = "";
+        deleteBtn.classList.add("hidden");
+        uploadPlaceholder.classList.remove("hidden");
+        updateGenerateButtonState();
+      }
+    });
+
+    function updateGenerateButtonState() {
+      const hasName = childNameInput.value.trim() !== "";
+      const hasPhoto = !!uploadedPhoto;
+      generateBtn.disabled = !hasName || !hasPhoto;
+    }
+
+    // Email gate → call generation
+    generateBtn.addEventListener("click", () => { emailModal.classList.remove("hidden"); userEmail.focus(); });
+    cancelEmail.addEventListener("click", () => emailModal.classList.add("hidden"));
+
+    submitEmail.addEventListener("click", async () => {
+      const email = userEmail.value.trim();
+      if(!email || !email.includes("@")) { alert("Please enter a valid email."); return; }
+      emailModal.classList.add("hidden");
+
+      if(!uploadedPhoto){ alert("Please upload a photo."); return; }
+
+      childName = (childNameInput.value || "My");
+      const base = promptsByCategory[selectedCategory] || "a warm, colorful children’s storybook scene";
+      const prompt = `Make this uploaded image a storybook cover: ${base}. The hero (matching this face) stands confidently in the scene. Insert text "${childName}'s ${selectedCategory} Book" in a playful display font.`;
+
+      loadingSpinner.classList.remove("hidden");
+      previewImg.classList.add("hidden");
+      deleteBtn.classList.add("hidden");
+      watermark.classList.add("hidden");
+
+      try {
+        const res = await fetch("/api/generate-avatar", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ image: uploadedPhoto.cdnUrl, prompt, email })
+        });
+        const data = await res.json();
+
+        if(data?.image){
+          generatedImageUrl = data.image;
+          finalPreviewImg.src = data.image;
+          finalTitle.textContent = `${childName}'s ${selectedCategory} Book`;
+          personalizeFormContainer.classList.add('hidden');
+          finalPreviewContainer.classList.remove('hidden');
+        } else {
+          throw new Error("API did not return a valid image.");
+        }
+      } catch(err) {
+        console.error(err);
+        alert("Something went wrong during generation. Please try again.");
+      } finally {
+        loadingSpinner.classList.add('hidden');
+      }
+    });
+
+    // Share & Download
+    const isSecureContext = location.protocol === 'https:' || location.hostname === 'localhost';
+
+    document.getElementById("shareBtn").addEventListener("click", () => {
+      if (!generatedImageUrl) { alert("Generate an image first."); return; }
+      shareModal.classList.remove("hidden");
+    });
+    cancelShare.addEventListener("click", () => shareModal.classList.add("hidden"));
+
+    downloadActionBtn.addEventListener("click", () => {
+      if (!generatedImageUrl) return;
+      const link = document.createElement('a');
+      link.href = generatedImageUrl;
+      const fileName = `${(childName || 'MagicTales').replace(/\s+/g,'-')}-cover.png`;
+      link.download = fileName;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    });
+
+    async function copyLinkToClipboard(url){
+      try {
+        await navigator.clipboard.writeText(url);
+        alert("Link copied! You can paste it anywhere ✨");
+      } catch {
+        prompt("Copy this link:", url);
+      }
+    }
+
+    async function tryShareUrl({title, text, url}){
+      if (navigator.share && isSecureContext) {
+        try {
+          await navigator.share({ title, text, url });
+          return true;
+        } catch (e) {
+          console.warn("URL share canceled/failed:", e);
+        }
+      }
+      return false;
+    }
+
+    shareActionBtn.addEventListener("click", async () => {
+      if (!generatedImageUrl) return;
+
+      const title = `${childName || 'My'}'s MagicTale`;
+      const text = "I just created this personalized storybook cover with MagicTales! ✨";
+      const url  = generatedImageUrl;
+
+      // Attempt file share first (best UX on mobile where supported)
+      if (navigator.share && isSecureContext) {
+        try {
+          const resp = await fetch(url, { mode: 'cors' });
+          const blob = await resp.blob();
+          const file = new File([blob], `${title.replace(/\s/g, "-")}.png`, { type: "image/png" });
+
+          if (navigator.canShare && navigator.canShare({ files: [file] })) {
+            await navigator.share({ title, text, files: [file] });
+            return;
+          }
+        } catch (err) {
+          console.warn("File share failed or blocked by CORS:", err);
+        }
+      }
+
+      // Fall back to URL share
+      const shared = await tryShareUrl({ title, text, url });
+      if (!shared) {
+        // Final fallback: copy link
+        await copyLinkToClipboard(url);
+      }
+    });
+
+    // Initial render
+    renderCategories();
+    renderWizardState();
+  </script>
+</body>
+</html>
